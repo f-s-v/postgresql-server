@@ -1,0 +1,17 @@
+---
+- name: Add postgresql repository key
+  sudo: yes
+  shell: "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -"
+- name: Add postgresql apt repository
+  sudo: yes
+  apt_repository: repo="deb http://apt.postgresql.org/pub/repos/apt/ {{ansible_lsb.codename}}-pgdg main" update_cache=yes
+- name: Install ansible postgres dependencies
+  sudo: yes
+  apt: name=python-psycopg2
+- name: Install postgresql server
+  sudo: yes
+  apt: name="{{item}}-{{psql_server_version}}"
+  with_items:
+    - postgresql
+    - postgresql-contrib
+    - postgresql-server-dev
